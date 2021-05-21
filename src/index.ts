@@ -1,5 +1,4 @@
 import express from 'express'
-import 
 
 // constants
 const port = process.env.PORT || 80
