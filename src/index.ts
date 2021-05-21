@@ -2,7 +2,7 @@ import express from 'express'
 import 
 
 // constants
-const port = process.env.PORT
+const port = process.env.PORT || 80
 
 // initialize application
 const app = express();
