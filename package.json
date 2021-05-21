@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc && node .",
-    "live": "nodemon src/index.ts"
+    "live": "nodemon src/index.ts",
+    "heroku-postbuild": "npx tsc"
   },
   "repository": {
     "type": "git",
