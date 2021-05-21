@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node .",
+    "start": "node dist",
     "live": "nodemon src/index.ts",
     "heroku-postbuild": "npx tsc"
   },
