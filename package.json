@@ -25,6 +25,9 @@
     "url": "https://github.com/SENG499-team-2/SaaSquatch-HubSpot-integration/issues"
   },
   "homepage": "https://github.com/SENG499-team-2/SaaSquatch-HubSpot-integration#readme",
+  "engines": {
+    "node": ">=14.17"
+  },
   "dependencies": {
     "express": "^4.17.1"
   },
