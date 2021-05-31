@@ -1,0 +1,9 @@
+if token
+    p You're authenticated using the token: #{token}
+    p Your account has these cool contacts 
+    ul
+        each contact in contacts 
+            li #{contact.properties.firstname.value} #{contact.properties.lastname.value}
+else 
+    p You're not authenticated
+    p please install me #[a(href=`${authUrl)}`) here]

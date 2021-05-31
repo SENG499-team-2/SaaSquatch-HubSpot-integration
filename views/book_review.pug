@@ -1,0 +1,27 @@
+doctype html 
+html(lang="en")
+    head 
+        title Review book 
+    body    
+        h1 Review Book 
+        form(method="POST")
+            label(for="bookTitle") Book Title 
+            input(type="text" name="bookTitle")
+            br
+            br
+            label(for="bookAuthor") Book Author 
+            input(type="text" name="bookAuthor")
+            br
+            br
+            label(for="rating") Rating 
+            select(name="rating") 
+                option(value="1") 1
+                option(value="2") 2
+                option(value="3") 3
+                option(value="4") 4
+                option(value="5") 5
+            br
+            br
+            label(for="bookReview") Book Review 
+            textarea(name="bookReview")
+            input(type="submit" value="Submit")  

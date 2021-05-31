@@ -1,0 +1,10 @@
+{
+    "runtime": "nodejs12.x",
+    "version": "1.0",
+    "endpoints": {
+        "webhookdemo": {
+            "method": "POST",
+            "file": "webhook_demo.js"
+        }
+    }
+}
