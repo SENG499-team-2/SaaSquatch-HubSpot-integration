@@ -5,6 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"tsc": "tsc",
+		"env": "node -r dotenv/config ./build",
 		"test": "echo UNIMPLEMENTED",
 		"server": "nodemon src/index.ts",
 		"frontend": "cd frontend && npm start",
@@ -42,7 +43,6 @@
 		"axios": "^0.21.1",
 		"chalk": "^4.1.1",
 		"dotenv": "^10.0.0",
-		"express": "^4.17.1",
-		"express-session": "^1.17.2"
+		"express": "^4.17.1"
 	}
 }

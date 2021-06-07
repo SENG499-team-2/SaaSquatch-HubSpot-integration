@@ -3,7 +3,7 @@ import express from 'express'
 import path from 'path'
 import chalk from 'chalk'
 import routes from './routes'
-import oauthroutes from './routes/oath'
+import dotenv from 'dotenv'
 
 // constants
 const PORT = process.env.PORT || 8000
