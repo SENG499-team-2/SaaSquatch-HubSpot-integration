@@ -21,9 +21,9 @@ app.use(routes);
 app.use(oauthroutes);
 
 // static routes
-app.use(express.static(path.join(__dirname, '../public')))
+app.use(express.static(path.join(__dirname, '../frontend/build/')))
 app.get('/', (_, res) => {
-	res.sendFile(path.join(__dirname, '../public', 'index.html'))
+	res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'))
 })
 app.get('*', (_, res) => {
 	res.redirect('/')

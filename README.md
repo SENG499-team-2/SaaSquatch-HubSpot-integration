@@ -5,7 +5,9 @@ A project created by volunteer software engineering students at the University o
 The API requires environment variables PORT and HAPIKEY.
 You can specify them in the terminal:
 
-`PORT=3000 HAPIKEY=... npm start`
+```
+PORT=3000 HAPIKEY=... npm run integration
+```
 
 or alternatively create a `.env` file with the following:
 
@@ -22,3 +24,12 @@ HUBSPOT_REDIRECT_URI=...
 SAASQUATCH_CLIENT_ID=...
 SAASQUATCH_CLIENT_SECRET=...
 ```
+
+To start the integration:
+```
+npm install && npm install --prefix ./frontend
+```
+```
+npm run integration
+```
+
