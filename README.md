@@ -32,4 +32,7 @@ npm install && npm install --prefix ./frontend
 ```
 npm run integration
 ```
-
+To start the integration for development:
+```
+npm run integration_watch
+```
