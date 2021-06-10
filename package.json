@@ -12,7 +12,7 @@
 		"start": "node ./build",
 		"heroku-postbuild": "npm build ./frontend && rm -r ./public && cp -r ./frontend/build/ ./public && npx tsc",
 		"integration": "npm run build --prefix ./frontend && npx tsc && node ./build/index.js",
-		"integration_watch": "npx tsc && nodemon ./src/index.ts"
+		"integration_watch": "nodemon ./src/index.ts"
 	},
 	"repository": {
 		"type": "git",
