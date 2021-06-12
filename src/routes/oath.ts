@@ -34,7 +34,7 @@ const isAuthorized = (userId: string) =>{
 // Return: Access token object or error object.
 // Access token object: {"refresh_token", "access_token", "expires_in"}
 // Error object: {"message"}
-const getHubspotAccessToken = async (refreshToken: string) => {
+export const getHubspotAccessToken = async (refreshToken: string) => {
 	// return early if missing some env variables
 	if (!HUBSPOT_CLIENT_ID || !HUBSPOT_CLIENT_SECRET) {
 		return {message: "ERROR: Hubspot client id or secret missing."};
