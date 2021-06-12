@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 8000
 const {
 	HUBSPOT_API_KEY: HAPIKEY,
 	SAASQUATCH_API_KEY: SAPIKEY,
+	NODE_ENV: NODE_ENV,
 	SAASQUATCH_TENANT_ALIAS: STENANTALIAS
 } = process.env
 
@@ -30,8 +31,14 @@ app.get('*', (_, res) => {
 })
 
 // launch
-app.listen(PORT, () => console.log(
-	chalk.bold('SaaSquatch-HubSpot') +
-	' integration listening on port ' +
-	chalk.blue.bold(PORT)
-))
+
+if(NODE_ENV != 'test')
+{
+	app.listen(PORT, () => console.log(
+		chalk.bold('SaaSquatch-HubSpot') +
+		' integration listening on port ' +
+		chalk.blue.bold(PORT)
+	))
+}
+
+export default app;
