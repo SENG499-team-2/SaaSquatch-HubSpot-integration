@@ -50,8 +50,19 @@ export const getHubspotAccessToken = async (refreshToken: string) => {
 		const resp = await axios.post(url, querystring.stringify(refreshTokenProof));
 		return resp.data;
 	} catch(e) {
-		console.log(e);
-		return e;
+
+		if(e.response.data.status == 'BAD_REFRESH_TOKEN')
+		{
+			// if the refresh token is invalid we need to invalidate the users session
+			// then we need to redirect them to /hubspot
+
+		}
+		else
+		{
+			console.log(e);
+			return e;
+		}
+
 	}
 }
 
