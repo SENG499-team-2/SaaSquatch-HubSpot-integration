@@ -1,9 +1,17 @@
 import app from '../src'
-import {getHubspotAccessToken} from '../src/routes/oath'
+import {getHubspotAccessToken, tokenStore} from '../src/routes/oath'
 import "mocha";
 const chai = require( 'chai')
 var assert = chai.assert;
 const supertest = require('supertest');
+
+
+
+
+//before need to call /hubspot
+
+// need to login and redirect
+
 
 
 it('1 should equal 1',function () {
@@ -13,6 +21,7 @@ it('1 should equal 1',function () {
 // before signin and get hubspot refresh token
 it('invalid refresh token should return an error',async function () {
 
+    console.log(tokenStore)
     getHubspotAccessToken("abcd");
 
 })

@@ -24,7 +24,7 @@ const SAASQUATCH_CLIENT_SECRET = process.env.SAASQUATCH_CLIENT_SECRET;
 
 // Temp token store, 
 // TODO: move to Firebase DB
-const tokenStore: any = {};
+export const tokenStore: any = {};
 
 const isAuthorized = (userId: string) =>{
     return tokenStore[userId] ? true : false;
