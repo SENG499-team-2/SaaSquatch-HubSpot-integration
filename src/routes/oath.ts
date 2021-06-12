@@ -51,17 +51,7 @@ export const getHubspotAccessToken = async (refreshToken: string) => {
 		return resp.data;
 	} catch(e) {
 
-		if(e.response.data.status == 'BAD_REFRESH_TOKEN')
-		{
-			// if the refresh token is invalid we need to invalidate the users session
-			// then we need to redirect them to /hubspot
-
-		}
-		else
-		{
-			console.log(e);
 			return e;
-		}
 
 	}
 }
@@ -168,9 +158,13 @@ router.get("/hubspot_refresh_token", async (req, res) => {
 		const token = await getHubspotAccessToken(tokenStore[req.sessionID]["refresh_token"]);
 		res.send(token);
 	} catch(e) {
-		console.log(e);
-		res.send(e);
+		// invalidate current session
+		// then redirect user to hubspot as token was invalid or somet other error occoured
+		// that we can also handle by asking the user to authenticate themselves again
+		res.redirect('/hubspot');
 	}
 });
+
+
 
 export default router
