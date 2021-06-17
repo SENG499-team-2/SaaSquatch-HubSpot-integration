@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import routes from './routes';
 import oauthroutes from './routes/oath';
 import webhooks from './routes/webhooks';
+import deals from './routes/Deals.API';
 
 
 // constants
@@ -26,6 +27,7 @@ app.use(bodyParser.json());
 app.use(routes);
 app.use(oauthroutes);
 app.use(webhooks);
+app.use(deals);
 
 // static routes
 app.use(express.static(path.join(__dirname, '../public')))

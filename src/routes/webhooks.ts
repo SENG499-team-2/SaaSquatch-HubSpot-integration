@@ -60,6 +60,9 @@ router.post("/saasquatch-webhook", async (req, res) => {
  * Endpoint for webhooks from HubSpot
  */
 router.post("/hubspot-webhook", async (req, res) => {
+    console.warn("inside hubspot-webhook");
+    console.log(JSON.stringify(req.body));
+   
     const signatureVersion = req.get("X-HubSpot-Signature-Version");
     const signature = req.get("X-HubSpot-Signature");
     if (signatureVersion && signature){
@@ -178,7 +181,8 @@ export function validateSaaSquatchWebhook(
         return false;
     }
     if(webhookBody) sourceString += webhookBody;
-    const hash = crypto.createHash('sha256').update(sourceString).digest('hex');
+     const hash = crypto.createHash('sha256').update(sourceString).digest('hex');
+     console.warn(hash == signature);
     return hash == signature;
 }
 
