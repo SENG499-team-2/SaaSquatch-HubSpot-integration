@@ -22,6 +22,11 @@ Feature: Connection
         Then then the integration should be disabled
         And should only be re-enabled when the user connects the integration again
 
-    Scenario: Disconnecting Hubspot from integration 
+    Scenario: Disconnecting Hubspot from integration
+        Given I have installed the integration in Hubspot
+        And I have Hubspot access and refresh tokens stored
     	When I disconnect the integration from my Hubspot account
-    	Then the integration can no longer make any protected API calls to Hubspot 
+    	And  the current access token expires
+        Then requests from the integration to protected endpoints in Hubspot fail
+        And the integration attempts to get a new access token from Hubspot
+        Then a bad request error is returned
