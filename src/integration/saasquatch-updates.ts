@@ -24,11 +24,8 @@ export async function NewUser(saasquatchPayload: any){
      * 3. If it does exist, send referral link to HubSpot for that contact.
      * 4. Done?
      */
-     const newEmail = saasquatchPayload.data.email;
-     console.log("email is");
-     console.log(newEmail);
-     const searchContactsURL = '/crm/v3/objects/contacts/search';
-     const createContactURL = '/crm/v3/objects/contacts';
+     const searchContactsURL = 'https://api.hubapi.com/crm/v3/objects/contacts/search';
+     const createContactURL = 'https://api.hubapi.com/crm/v3/objects/contacts';
      const saasquatchPayloadData = saasquatchPayload.data;
 
      const searchContactBody =  {
@@ -36,7 +33,7 @@ export async function NewUser(saasquatchPayload: any){
           {
               filters: [
               {
-                "value": newEmail, 
+                "value": saasquatchPayloadData.email, 
                 "propertyName": 'email', 
                 "operator": 'EQ'
             }
@@ -48,14 +45,14 @@ export async function NewUser(saasquatchPayload: any){
     
     //Search for contact in hubspot
     try{
-        
-        const contacts = await axios.post(searchContactsURL, searchContactBody,{
+        const contacts = await axios.post(searchContactsURL,searchContactBody, {
                 params: {
-                    hapikey: HAPIKEY
+                    hapikey: HAPIKEY,
                 }
         });
+        
         //the contact is not in hubspot
-        if(contacts.data.total){
+        if(contacts.data.total == 0){
             //post new contact to hubspot
             const createContactBody = {
                 "properties":{
@@ -66,13 +63,13 @@ export async function NewUser(saasquatchPayload: any){
                 }
 
             };
-            const response = await axios.post(createContactURL, createContactBody,{
+            await axios.post(createContactURL, createContactBody,{
 
                 params: {
                     hapikey: HAPIKEY
                 }
             });
-            console.log(response);
+            
         }
         
     } catch (e) {
@@ -80,7 +77,6 @@ export async function NewUser(saasquatchPayload: any){
         console.error(e);
     }
     
-    console.log("end of function")
 }
 
 
