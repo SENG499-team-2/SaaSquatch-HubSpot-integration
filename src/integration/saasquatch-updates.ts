@@ -1,6 +1,10 @@
 import axios from "axios";
 import { SaasquatchPayload } from "../Types/types";
 const HAPIKEY = process.env.HAPIKEY || '';
+import * as DealAPI from "../routes/Deals.API";
+import * as ContactAPI from "../routes/Contacts.API";
+import * as SearchAPI from "../routes/Search.API"
+import * as AssociationsAPI from "../routes/Associations.API"
 
 
 /**
@@ -9,25 +13,23 @@ const HAPIKEY = process.env.HAPIKEY || '';
 
 
 
+export async function NewReward(saasquatchPayload: any){
+    console.log('Received SaaSquatch coupon.create. This is not yet implemented.');
+}
+
+export async function NewCoupon(saasquatchPayload: any){
+    console.log('Received SaaSquatch coupon.create. This is not yet implemented.');
+    
+}
 /**
- * Received webhook of event type 'user.created'
+ * Received webhook of event type 'user.created' 
  * @param saasquatchPayload Payload of SaaSquatch webhook
  */
 export async function NewUser(saasquatchPayload: any){
-    console.log('Received SaaSquatch user.created. This is not yet implemented.');
+    console.log('Received SaaSquatch user.created.');
+    console.log(saasquatchPayload);
     
-    /**
-     * TODO:
-     * Steps
-     * 1. Check if user exists as contact in HubSpot (match by email)
-     * 2. If it does not exist, create new contact in HubSpot
-     * 3. If it does exist, send referral link to HubSpot for that contact.
-     * 4. Done?
-     */
-     const searchContactsURL = 'https://api.hubapi.com/crm/v3/objects/contacts/search';
-     const createContactURL = 'https://api.hubapi.com/crm/v3/objects/contacts';
      const saasquatchPayloadData = saasquatchPayload.data;
-
      const searchContactBody =  {
         filterGroups: [
           {
@@ -42,40 +44,70 @@ export async function NewUser(saasquatchPayload: any){
         ],
         limit: 1,
       };
-    
-    //Search for contact in hubspot
-    try{
-        const contacts = await axios.post(searchContactsURL,searchContactBody, {
-                params: {
-                    hapikey: HAPIKEY,
-                }
-        });
-        
-        //the contact is not in hubspot
-        if(contacts.data.total == 0){
-            //post new contact to hubspot
-            const createContactBody = {
-                "properties":{
-                    "email": saasquatchPayloadData.email,
-                    "firstname": saasquatchPayloadData.firstName,
-                    "lastname": saasquatchPayloadData.lastName,
+      //Need to check if user is in hubspot
+      console.log("checking for contact");
+      const hasContactResponse = await ContactAPI.HasContact(searchContactBody);
+    if((hasContactResponse?.data.total == 0)){
+        const createContactBody = {
+            "properties":{
+                "email": saasquatchPayloadData.email,
+                "firstname": saasquatchPayloadData.firstName,
+                "lastname": saasquatchPayloadData.lastName,
+            }
 
-                }
-
-            };
-            await axios.post(createContactURL, createContactBody,{
-
-                params: {
-                    hapikey: HAPIKEY
-                }
-            });
-            
-        }
-        
-    } catch (e) {
-        console.error("was not able to search for contact");
-        console.error(e);
+        };
+        const contactResponse = await ContactAPI.CreateContact(createContactBody);
+        var contactResponseID = contactResponse?.data.id;
+        //they are so need to get their contact id to associate the deal with
+    } else {
+        var contactResponseID = hasContactResponse?.data.id;
     }
+        //now creating deals for that user in hubspot
+        //Check if property exists in deal object
+        //from user.create just need: referralCodes, programShareLinks
+        //maybe add more fields later like expirary date, start date
+        console.log("=================now creating deal properties=========== ")
+        
+        //this might be changed
+       
+        const programIdResponse = await DealAPI.DealHasProperty("programId");
+        if(!(programIdResponse)){
+            await DealAPI.CreateDealProperty("programId", "Program", "string", "textarea", "referral")
+        }
+      
+        // if (!await DealAPI.DealHasProperty("referralCode")){
+        //     await DealAPI.CreateDealProperty("referralCodes", "referral code", "string", "textarea", "referral");
+        // }
+        
+       
+        // if(!await DealAPI.DealHasProperty("programShareLink")){
+        //     await DealAPI.CreateDealProperty("programShareLink", "Program share link","string", "textarea", "referral");
+        // }
+        
+        console.log("now creating deals for each program in saasquatchpayload");
+        // for (const [programId, referralCode] of Object.entries(saasquatchPayloadData.referralCodes)){
+        //     const cleanShareLink = saasquatchPayloadData.programShareLinks["programId"].cleanShareLink;
+        //     const properties = {
+        //         "programId": programId,
+        //         "referralCode":referralCode,
+        //         "programShareLink": cleanShareLink
+            
+        //     }
+        //     const dealResponse = await DealAPI.CreateDeal(properties);
+        //     var createAssociationBody =
+        //         {
+        //             "fromObjectId": dealResponse?.data.id,
+        //             "toObjectId": contactResponseID,
+        //             "category": "HUBSPOT_DEFINED",
+        //             "definitionId": 3
+        //         }
+        //     AssociationsAPI.createAssociation(createAssociationBody);
+            
+
+        // }
+        
+        console.log("end of function");
+    
     
 }
 

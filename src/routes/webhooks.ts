@@ -125,6 +125,8 @@ function processSaasquatchPayload(saasquatchPayload: SaasquatchPayload) {
         case EventType.Test:
             saasquatchUpdate.Test(saasquatchPayload);
             break;
+        case EventType.CouponCreated:
+            saasquatchUpdate.NewCoupon(saasquatchPayload);
         default:
             console.error("No matching EventType. May not yet be implemented.\
              Received type: "+saasquatchPayload.type);
