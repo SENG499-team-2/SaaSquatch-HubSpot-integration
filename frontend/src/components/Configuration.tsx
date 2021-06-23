@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
 import { ToggleSetting } from './ToggleSetting';
 import HubspotLogo from '../assets/HubspotLogo.png';
+import axios from 'axios';
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -111,7 +112,21 @@ export function Controller(){
       updateUser: false,
     }
   }
+
   const [config, setConfig] = useState<Config>(emptyConfig)
+
+  // Gets config data on page load
+  useEffect(() => {
+    const getConfigData = () => {
+      const url = 'http://localhost:8000/';
+      axios.get(`${url}configData`)
+      .then((response) => {
+        setConfig(config => ({...config, hubSync: {...config.hubSync, isActive: response.data.hubspotToSaasquatch}, saasSync: {...config.saasSync, isActive: response.data.saasquatchToHubspot}}));
+      })
+      .catch(error => console.error('Error: Unable to retrieve Configuration Data'))
+    };
+    getConfigData();
+  },[]);
 
   // Need a handler for each toggle because Switches are kinda weird
   const toggleHubSync = () => setConfig({...config, hubSync: {...config.hubSync, isActive: !config.hubSync.isActive}});
@@ -131,9 +146,16 @@ export function Controller(){
     toggleSaasCreate,
     toggleSaasUpdate,
   };
+
+  const postConfigData = () => {
+    const url = 'http://localhost:8000/';
+    // TODO Update to pass config data to database
+    axios.post(`${url}configData`)
+  }
   
   const handleSubmit = () => {
     // Here we will make the requests to the backend to store the config info and to begin the integration
+    postConfigData()
     successToast()
   }
 

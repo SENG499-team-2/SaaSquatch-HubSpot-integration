@@ -5,7 +5,7 @@ import chalk from 'chalk';
 import routes from './routes';
 import oauthroutes from './routes/oath';
 import webhooks from './routes/webhooks';
-
+import cors from 'cors';
 
 // constants
 const PORT = process.env.PORT || 8000;
@@ -17,6 +17,14 @@ const {
 
 // configure
 const app = express();
+
+// use cors for requests from frontend
+const allowedOrigins = ['http://localhost:3000'];
+const options: cors.CorsOptions = {
+  origin: allowedOrigins
+};
+app.use(cors(options));
+app.use(express.json());
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
