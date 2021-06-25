@@ -4,26 +4,14 @@ import path from 'path';
 import chalk from 'chalk';
 import routes from './routes';
 import oauthroutes from './routes/oath';
+import { configurationRoutes } from './routes/configuration'
 import webhooks from './routes/webhooks';
-import cors from 'cors';
 
 // constants
 const PORT = process.env.PORT || 8000;
-const {
-	HUBSPOT_API_KEY: HAPIKEY,
-	SAASQUATCH_API_KEY: SAPIKEY,
-	SAASQUATCH_TENANT_ALIAS: STENANTALIAS
-} = process.env;
 
 // configure
 const app = express();
-
-// use cors for requests from frontend
-const allowedOrigins = ['http://localhost:3000'];
-const options: cors.CorsOptions = {
-  origin: allowedOrigins
-};
-app.use(cors(options));
 app.use(express.json());
 
 const bodyParser = require('body-parser');
@@ -33,6 +21,7 @@ app.use(bodyParser.json());
 // dynamic routes
 app.use(routes);
 app.use(oauthroutes);
+app.use(configurationRoutes);
 app.use(webhooks);
 
 // static routes

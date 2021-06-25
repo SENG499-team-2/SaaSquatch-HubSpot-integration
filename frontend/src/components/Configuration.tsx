@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled from 'styled-components';
@@ -66,6 +66,7 @@ const SyncButton = styled.button`
   margin-right: 10px;
 `;
 
+const API_CONFIGURATION_URL = '/api/configuration'
 interface Config {
   hubSync: {
     isActive: boolean,
@@ -118,8 +119,7 @@ export function Controller(){
   // Gets config data on page load
   useEffect(() => {
     const getConfigData = () => {
-      const url = 'http://localhost:8000/';
-      axios.get(`${url}configData`)
+      axios.get(API_CONFIGURATION_URL)
       .then((response) => {
         setConfig(config => ({...config, hubSync: {...config.hubSync, isActive: response.data.hubspotToSaasquatch}, saasSync: {...config.saasSync, isActive: response.data.saasquatchToHubspot}}));
       })
@@ -147,21 +147,38 @@ export function Controller(){
     toggleSaasUpdate,
   };
 
-  const postConfigData = () => {
-    const url = 'http://localhost:8000/';
-    // TODO Update to pass config data to database
-    axios.post(`${url}configData`)
-  }
-  
+  /*
   const handleSubmit = () => {
     // Here we will make the requests to the backend to store the config info and to begin the integration
     postConfigData()
     successToast()
-  }
+  }*/
 
-  const successToast = () => toast.success("HubSpot Integration is Connected", {
-    position: toast.POSITION.BOTTOM_RIGHT
-  });
+
+  const handleSubmit = useCallback( () => {
+	const postConfigData = async ( config: Config ) => {
+		const {
+			hubSync: { isActive: hubspotToSaasquatch },
+			saasSync: { isActive: saasquatchToHubspot}
+		} = config
+
+		// TODO Update to pass config data to database
+		return await fetch(API_CONFIGURATION_URL, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ hubspotToSaasquatch, saasquatchToHubspot })
+		})
+	  }
+
+	const successToast = () => toast.success("HubSpot Integration is Connected", {
+		position: toast.POSITION.BOTTOM_RIGHT
+	});
+
+	postConfigData(config)
+		.then( () => successToast() )
+		.catch( e => console.error(e) )
+}, [config])
+
   return {config, handleSubmit, handleToggles} as states
 }
 
