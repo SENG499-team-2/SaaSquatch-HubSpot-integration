@@ -34,9 +34,9 @@
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "test": "yarn run build-tests && yarn run run-tests && yarn run clean-tests",
-		"build-tests": "tsc --resolveJsonModule --esModuleInterop **/test/*.ts",
-		"run-tests": "jest",
-		"clean-tests": "rm **/test/*.js"
+    "build-tests": "tsc --resolveJsonModule --esModuleInterop **/test/*.ts",
+    "run-tests": "jest",
+    "clean-tests": "rm **/test/*.js"
   },
   "eslintConfig": {
     "extends": [
