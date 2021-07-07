@@ -2,7 +2,7 @@ import axios from "axios";
 
 export class SaasquatchApiModel {
 
-    
+
     // Temp access until DB has OAuth access tokens
     private SAPIKEY: string;
     private TENANTALIAS: string;
@@ -15,7 +15,7 @@ export class SaasquatchApiModel {
     /**
      * Get users from SaaSquatch that match paramToFilterBy
      * Currently gets all users or zero users as filter is not working
-     * 
+     *
      * @param paramToFilterBy list of query parameters to filter by. eg. 'email:example@example.com'?
      */
     public async getUsers(paramToFilterBy?: string){
@@ -26,12 +26,12 @@ export class SaasquatchApiModel {
             qs = paramToFilterBy;
         }
         try {
-            const resp = await axios.get( url, { 
-                params: { 
+            const resp = await axios.get( url, {
+                params: {
                     query: qs,
                     limit: 10,
                     offset: 0
-                }, 
+                },
                 headers: headers,
                 auth: {
                     username: '',
@@ -61,12 +61,28 @@ export class SaasquatchApiModel {
                   });
                 return response;
             } catch (e) {
-                console.error("Was not able to create contact");
+                console.error("Was not able to delete contact");
                 console.log(e);
             }
         }
 
+    public async deleteParticipant(email:string, createParticipantBody:object){
+        try{
+            //URL should be built using express URL class
+            const deleteParticipantURL = 'https://staging.referralsaasquatch.com/api/v1/' +this.TENANTALIAS+ '/open/account/' + email + '/user/' + email;
+            const response = await axios.post(deleteParticipantURL, createParticipantBody,{
+                headers: {
+                    'Authorization':'token '+this.SAPIKEY
+                }
+            });
+            return response;
+        } catch (e) {
+            console.error("Was not able to create contact");
+            console.log(e);
+        }
+    }
 
-   
+
+
 
 }

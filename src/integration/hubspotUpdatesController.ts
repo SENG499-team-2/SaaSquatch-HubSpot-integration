@@ -1,4 +1,4 @@
-import { HubspotPayload } from "../Types/types";
+import {HubspotPayload, SubscriptionType} from "../Types/types";
 import { HubspotApiModel } from "./HubspotApiModel";
 import { SaasquatchApiModel } from "./SaasquatchApiModel";
 
@@ -13,18 +13,18 @@ export class hubspotUpdatesController{
         this.hubApiModel = new HubspotApiModel(hApiKey);
     }
 
-    
-   
+
+
     /**
      * Received webhook of subscription type 'contact.created'
      * @param hubspotPayload Payload of Hubspot webhook
      */
     public NewContact(hubspotPayload: HubspotPayload){
         console.log('received HubSpot contact.creation');
-        
+
         const contactObjectId: number = hubspotPayload.objectId;
         console.log("New contact obj id: "+contactObjectId);
-    
+
         // Hubspot does not include email in contact.created
         // Get new contact's email
         let params ='';
@@ -48,7 +48,7 @@ export class hubspotUpdatesController{
                             "lastName": participant.properties.lastname,
                             "id": participant.properties.email,
 						    "accountId": participant.properties.email,
-            
+
                     };
                     this.saasApiModel.createParticipant(participant.properties.email, createParticipantBody);
                 }
@@ -59,18 +59,18 @@ export class hubspotUpdatesController{
                 }
 
                 // 4. TODO: send referral link back to hubspot to add to contact
-            
+
                 }
-    
+
             );
         });
         //console.log("contact email: "+ contactEmail);
         // const params = `email:${contactEmail}`;
         console.log(params);
     }
-    
-    
-    
+
+
+
     /**
      * Received webhook of subscription type 'contact.deletion'
      * @param hubspotPayload Payload of Hubspot webhook
@@ -85,9 +85,25 @@ export class hubspotUpdatesController{
          * 3. If it does exist, post to hubspot to delete user?
          * 4. Done?
          */
+        const contactObjectId: number = hubspotPayload.objectId;
+        console.log("New contact obj id: "+contactObjectId);
+        // eventId: number;
+        // subscriptionId: number;
+        // portalId: number;
+        // appId: number;
+        // occurredAt: number;
+        // subscriptionType: SubscriptionType;
+        // attemptNumber: number;
+        // objectId: number;
+        // propertyName?: string;
+        // propertyValue?: string;
+        // changeFlag?: string;
+        // changeSource: string;
+        console.log(hubspotPayload.eventId,hubspotPayload.subscriptionId,hubspotPayload.portalId);
+
     }
-    
-    
+
+
     /**
      * Received webhook of subscription type 'contact.propertyChange'
      * @param hubspotPayload Payload of Hubspot webhook
