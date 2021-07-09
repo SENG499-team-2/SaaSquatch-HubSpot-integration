@@ -66,23 +66,23 @@ export class SaasquatchApiModel {
             }
         }
 
-    public async deleteParticipant(email:string, createParticipantBody:object){
+    /**
+     * Get all users from SaaSquatch
+     */
+    public async getAllParticipants(){
         try{
             //URL should be built using express URL class
-            const deleteParticipantURL = 'https://staging.referralsaasquatch.com/api/v1/' +this.TENANTALIAS+ '/open/account/' + email + '/user/' + email;
-            const response = await axios.post(deleteParticipantURL, createParticipantBody,{
+            const getAllParticipantsURL = 'https://staging.referralsaasquatch.com/api/v1/' +this.TENANTALIAS+ '/user/';
+            const response = await axios.post(getAllParticipantsURL,{
                 headers: {
                     'Authorization':'token '+this.SAPIKEY
                 }
             });
             return response;
         } catch (e) {
-            console.error("Was not able to create contact");
+            console.error("Was not able to get the participants list");
             console.log(e);
         }
     }
-
-
-
 
 }

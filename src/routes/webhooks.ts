@@ -51,7 +51,7 @@ const crypto = require("crypto");
 
 /**
  * Endpoint for webhooks from SaaSquatch
- */ 
+ */
 router.post("/saasquatch-webhook", async (req, res) => {
     const jwsNoPayloadHeader: string | undefined = req.get("X-Hook-JWS-RFC-7797");
     if (!jwsNoPayloadHeader){
@@ -83,7 +83,7 @@ router.post("/saasquatch-webhook", async (req, res) => {
         console.error(error);
         res.status(500).end();
     });
-    
+
 });
 
 /**
@@ -119,10 +119,10 @@ router.post("/hubspot-webhook", async (req, res) => {
     req.body.forEach( (hubspotPayload: HubspotPayload) => {
         processHubspotPayload(hubspotPayload);
     });
-    
+
 });
 
-function processSaasquatchPayload(saasquatchPayload: SaasquatchPayload) {  
+function processSaasquatchPayload(saasquatchPayload: SaasquatchPayload) {
     switch(saasquatchPayload.type){
         case EventType.UserCreated:
             saasUpdatesController.NewUser(saasquatchPayload);
@@ -138,7 +138,7 @@ function processSaasquatchPayload(saasquatchPayload: SaasquatchPayload) {
 }
 
 
-function processHubspotPayload(hubspotPayload: HubspotPayload) {  
+function processHubspotPayload(hubspotPayload: HubspotPayload) {
     switch (hubspotPayload.subscriptionType){
         case SubscriptionType.ContactCreation:
             hubUpdatesController.NewContact(hubspotPayload);
@@ -161,7 +161,7 @@ function processHubspotPayload(hubspotPayload: HubspotPayload) {
 
 /**
  * Validate the given JWT with SaaSquatch public JWKS and get the claims.
- * 
+ *
  * @param token The input JWT
  */
 export function validateWithSaaSquatchJwks(token: string): Promise<object> {
@@ -184,14 +184,14 @@ export function validateWithSaaSquatchJwks(token: string): Promise<object> {
 }
 
 /**
- * Verifying a SaaSquatch Webhook Payload: 
+ * Verifying a SaaSquatch Webhook Payload:
  * 1. Ensure the X-Hook-JWS-RFC-7797 header exists. If it doesn't exist, this request didn't come from SaaSquatch.
- * 2. Look up the SaaSquatch JWKS at http://app.referralsaasquatch.com/.well-known/jwks.json. This contains the 
- *    public keys, and should have a kid that matches the JWS Header of the JWS. The JWKS changes regularly and 
- *    should not be cached in its entirety. 
+ * 2. Look up the SaaSquatch JWKS at http://app.referralsaasquatch.com/.well-known/jwks.json. This contains the
+ *    public keys, and should have a kid that matches the JWS Header of the JWS. The JWKS changes regularly and
+ *    should not be cached in its entirety.
  * 3. Grab the JSON body from the request. This should always be JSON.
  * 4. Use a JWT library to verify the body matches the signature.
- * 
+ *
  * REF: https://docs.saasquatch.com/api/webhooks/security/
  *
  * @param webhookBody The raw text of the webhook body.
@@ -208,8 +208,8 @@ export function validateSaaSquatchWebhook(
 
 
 /**
- *  Verifying a HubSpot Webhook Payload: 
- * 1. Check the X-HubSpot-Signature and X-HubSpot-Signature-Version headers exists. If these don't, this request 
+ *  Verifying a HubSpot Webhook Payload:
+ * 1. Check the X-HubSpot-Signature and X-HubSpot-Signature-Version headers exists. If these don't, this request
  *    didn't come from HubSpot.
  * 2. Check the X-HubSpot-Signature-Version for the version.
  * 3. To validate the v1 request signature:
@@ -220,7 +220,7 @@ export function validateSaaSquatchWebhook(
  *      a) Create a string concatinating the Client secret + http method + URI + request body
  *      b) Create a SHA-256 hash of the string
  *      c) Compare hash to X-HubSpot-Signature
- * 
+ *
  * REF: https://developers.hubspot.com/docs/api/webhooks/validating-requests
  *
  * @param webhookBody The raw text of the webhook body.
