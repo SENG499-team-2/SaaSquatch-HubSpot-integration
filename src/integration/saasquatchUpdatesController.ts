@@ -28,8 +28,8 @@ export class saasquatchUpdatesController{
                 {
                     filters: [
                     {
-                      "value": saasquatchPayloadData.email, 
-                      "propertyName": 'email', 
+                      "value": saasquatchPayloadData.email,
+                      "propertyName": 'email',
                       "operator": 'EQ'
                   }
                    ]
@@ -46,20 +46,21 @@ export class saasquatchUpdatesController{
                     "firstname": saasquatchPayloadData.firstName,
                     "lastname": saasquatchPayloadData.lastName,
                 }
-    
+
             };
             await this.hubApiModel.createObject("contacts", createContactBody);
          }
     }
 
 
+
     /**
      * Received webhook of event type 'test'. No processing required as this is a test webhook.
-     * 
+     *
      * @param saasquatchPayload Payload of SaaSquatch webhook
      */
     public Test(saasquatchPayload: SaasquatchPayload){
-        console.log('Received SaaSquatch test webhook.');  
+        console.log('Received SaaSquatch test webhook.');
     }
 
 }

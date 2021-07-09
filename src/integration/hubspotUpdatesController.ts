@@ -80,26 +80,16 @@ export class hubspotUpdatesController{
         /**
          * TODO:
          * Steps
-         * 1. Check if contact exists as user in SaaSquatch (match by email)
-         * 2. If it does not exist, do nothing
-         * 3. If it does exist, post to hubspot to delete user?
-         * 4. Done?
+         * the precondition of this function is that
+         * the contact list in hubspot is exactly same with participants list in Saas
+         * or Saas list do includes all the contacts in hubspot
+         * 1. Get the participants list in Saasquatch
+         * 2. Get the contcts list in Hubspot
+         * 3. Compare participants list with contcts list
+         * 4. Delete the extra participants in saas.
          */
-        const contactObjectId: number = hubspotPayload.objectId;
-        console.log("New contact obj id: "+contactObjectId);
-        // eventId: number;
-        // subscriptionId: number;
-        // portalId: number;
-        // appId: number;
-        // occurredAt: number;
-        // subscriptionType: SubscriptionType;
-        // attemptNumber: number;
-        // objectId: number;
-        // propertyName?: string;
-        // propertyValue?: string;
-        // changeFlag?: string;
-        // changeSource: string;
-        console.log(hubspotPayload.eventId,hubspotPayload.subscriptionId,hubspotPayload.portalId);
+        const userInSaas = this.saasApiModel.getAllParticipants();
+        console.log(userInSaas);
 
     }
 
