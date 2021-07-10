@@ -83,15 +83,40 @@ export class hubspotUpdatesController{
          * the precondition of this function is that
          * the contact list in hubspot is exactly same with participants list in Saas
          * or Saas list do includes all the contacts in hubspot
-         * 1. Get the participants list in Saasquatch
-         * 2. Get the contcts list in Hubspot
-         * 3. Compare participants list with contcts list
-         * 4. Delete the extra participants in saas.
+         * 1. Get the participants list in Saasquatch --> userInsaas
+         * 2. check if the participants exist in Hubspot
+         *  --> if the participant exist in hubspot --> do noting
+         *  --> if the participant does not exist in hubspot -> Delete the participants in saas.
          */
-        const userInSaas = this.saasApiModel.getAllParticipants();
-        console.log(userInSaas);
+        const contactObjectId: number = hubspotPayload.objectId;
+        // console.log("New contact obj id: "+contactObjectId);
+        // this.saasApiModel.getAllParticipants()
+        //     .then(data =>{ // data stores all the participants in Saas
+        //         // console.log(data);
+        //         if (data.count != 0 ){
+        //             console.log('there are total '+  data.count + " contacts");
+        //             for(let i=0; i<data.count; i++){
+        //                 console.log(data.users[i].email);
+        //                 this.hubApiModel.searchUser(data.users[i].email) // search the participants in hubspot
+        //                     .then(data=>{ //data stores the info of the each participants in hubspot
+        //                         // console.log(data);
+        //                         if(data.total==0){ // data.total=0 --> the user exists in hubspot
+        //                             console.log(data.query + " does not exist in hubspot");
+        //                             // this.saasApiModel.deleteParticipant(data.)
+        //                         }else if(data.total==1) { // data.total=1 --> the user does not exist in hubspot means user already deleted it
+        //                             console.log(data.query + " exists in hubspot");
+        //                         }else{
+        //                             console.log( " ERROR !!!!!!!!!");
+        //                         }
+        //                     })
+        //             }// for loop
+        //         }
+        //
+        //     })
 
     }
+
+
 
 
     /**
