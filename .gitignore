@@ -119,3 +119,6 @@ frontend/build/*
 # Yarn lock
 yarn.lock
 frontend/yarn.lock
+
+#idea
+.idea/
