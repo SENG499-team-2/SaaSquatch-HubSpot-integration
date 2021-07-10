@@ -6,14 +6,14 @@
 
 export enum SubscriptionType {
     ContactCreation = 'contact.creation',
-    ContactDeletion = 'contact.deletion', 
-    ContactPrivacyDelection = 'contact.privacyDeletion', 
-    ContactPropertyChange = 'contact.propertyChange', 
+    ContactDeletion = 'contact.deletion',
+    ContactPrivacyDelection = 'contact.privacyDeletion',
+    ContactPropertyChange = 'contact.propertyChange',
     CompanyCreation = 'company.creation',
     CompanyDeletion = 'company.deletion',
     CompanyPropertyChange = 'company.propertyChange',
-    DealCreation = 'deal.creation', 
-    DealDeletion = 'deal.deletion', 
+    DealCreation = 'deal.creation',
+    DealDeletion = 'deal.deletion',
     DealPropertyChange = 'deal.propertyChange'
  }
 
@@ -40,10 +40,10 @@ export interface HubspotPayload{
 export enum EventType {
   UserCreated = 'user.created',
   UserRewardBalanceChanged = 'user.reward.balance.changed',
-  CouponCreated = 'coupon.created', 	
-  RewardCreated = 'reward.created', 
-  EmailReferredRewardEarned = 'email.referred.reward.earned', 	
-  EmailReferralStarted = 'email.referral.started', 
+  CouponCreated = 'coupon.created',
+  RewardCreated = 'reward.created',
+  EmailReferredRewardEarned = 'email.referred.reward.earned',
+  EmailReferralStarted = 'email.referral.started',
   EmailReferralPaid = 'email.referral.paid',
   EmailReferralRewardLimitReached = 'email.referral.rewardLimitReached',
   ReferralAutomoderationComplete = 'referral.automoderation.complete',
@@ -70,12 +70,12 @@ export interface SaasquatchPayload{
  */
 
 export interface Configuration {
-    PushPartixipantsAsContacts: boolean, 
+    PushPartixipantsAsContacts: boolean,
     PullParticipantsIntoContacts: boolean,
     DeleteContactwhenParticipantDeleted: boolean,
     PushContactsAsParticipants: boolean,
-    PullContactsIntoParticipants: boolean, 
+    PullContactsIntoParticipants: boolean,
     DeleteParticipantWhenContactDeleted: boolean,
-    accessToken: string, 
+    accessToken: string,
     refreshToken: string
 }
