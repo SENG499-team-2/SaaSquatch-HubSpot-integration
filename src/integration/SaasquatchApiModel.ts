@@ -73,7 +73,6 @@ export class SaasquatchApiModel {
      * 2,147,483,647 participants in one time. if there are over
      * 2,147,483,647 participants, it will fail to return the resting
      * participants.
-     *
      */
     public async getAllParticipants(){
         try{
@@ -95,6 +94,11 @@ export class SaasquatchApiModel {
         }
     }
 
+    /**
+     * Delete users from SaaSquatch based on the userId and accountId
+     *
+     * @param  eg. userId->'BryanCooper' ; accountId->'BryanCooper'
+     */
     public async deleteParticipant(userId:string, accountId:string){
         try{
             const createParticipantURL = 'https://staging.referralsaasquatch.com/api/v1/' +this.TENANTALIAS+ '/open/account/' + accountId + '/user/' + userId;
