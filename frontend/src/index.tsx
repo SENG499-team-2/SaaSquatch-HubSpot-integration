@@ -20,15 +20,21 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 ReactDOM.render(
-    <Router history={history}>
-        <PenpalContextProvider loading={<p>Loading state</p>} fallback={<p>Fallback state</p>}>
-            <React.StrictMode>
-                <App />
-            </React.StrictMode>
-        </PenpalContextProvider>
-    </Router>,
-    document.getElementById('root'),
-);
+	<Router history={history}>
+    <PenpalContextProvider 
+      loading={
+        <p>Loading state</p>
+      }
+      fallback={
+        <p>Fallback state</p>
+      }>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </PenpalContextProvider>
+  	</Router>,
+	document.getElementById('root')
+)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
