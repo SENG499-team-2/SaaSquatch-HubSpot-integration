@@ -1,6 +1,7 @@
 import axios from "axios";
 import {get_current_user} from "../routes/oath";
-import {PollTokensFromDatabase} from "../database";
+import {AddTokensToDatabase, PollTokensFromDatabase} from "../database";
+import {getHubspotAccessToken} from "../routes/oath";
 
 /**
  * This is the model between the HubSpot API and our controller.
@@ -14,10 +15,12 @@ export class HubspotApiModel {
      * @param objectId objectID of contact to query
      * @param paramToGet query parameters to filter by. eg. 'email'.
      */
-    public async getContact(contactObjectID: number, paramToGet?: string){
+    public async getContact (contactObjectID: number, paramToGet?: string){
         console.log("this is current user ", get_current_user());
+
         let token:any = await PollTokensFromDatabase(get_current_user());
         let access_token = token.accessToken;
+        let refresh_token = token.refreshToken;
         const url = `https://api.hubapi.com/crm/v3/objects/contacts/${encodeURIComponent(contactObjectID)}`;
 
         let options:any = {
@@ -36,6 +39,7 @@ export class HubspotApiModel {
                 headers:{accept: 'application/json',authorization:`Bearer ${access_token}`}
             };
         }
+
         try{
             const resp = await axios.get(url, options);
             if (resp.status != 200) {
@@ -44,8 +48,30 @@ export class HubspotApiModel {
             else{
                 return resp.data;
             }
-        }catch(e){
-            console.error(e);
+        }
+        catch(e)
+        {
+
+            try {
+                let result = await getHubspotAccessToken(refresh_token);
+                if(result.status == 200)
+                {
+                    //#TODO check if there is a more efficient way to store this
+                    AddTokensToDatabase(get_current_user(),result.data.access_token, result.data.refresh_token)
+                    return await this.getContact(contactObjectID,paramToGet);
+                }
+                else {
+                    //below is equivalent to rejecting promise return Promise.reject(400 /*or Error*/ );
+                    return JSON.parse(result);
+                }
+
+            }
+            catch(e)
+            {
+                return Promise.reject(400 /*or Error*/ );
+
+            }
+
         }
     }
 
