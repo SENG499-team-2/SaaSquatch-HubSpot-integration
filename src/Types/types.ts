@@ -15,8 +15,8 @@ export enum SubscriptionType {
     DealPropertyChange = 'deal.propertyChange',
 }
 
-export interface HubspotPayload {
-    eventId: string;
+export interface HubspotPayload{
+    eventId: number;
     subscriptionId: number;
     portalId: number;
     appId?: number;
