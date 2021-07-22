@@ -2,9 +2,8 @@ import { Router } from 'express';
 require('dotenv').config();
 import axios from 'axios';
 const querystring = require('query-string');
-import { AddTempUser } from '../database';
-import { PollTokensFromDatabase } from '../database';
 import { AddTempUser } from "../database"
+import { PollTokensFromDatabase } from '../database';
 import { IntegrationTokens } from '../Types/types';
 const jwt = require('jsonwebtoken');
 
