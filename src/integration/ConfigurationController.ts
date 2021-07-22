@@ -11,10 +11,16 @@ export class ConfigurationController {
 		return ConfigurationModel.getConfiguration(tenantAlias)
 	}
 	public static async setConfiguration(hubspotId: string, configuration: Configuration): Promise<void> {
+		if(configuration.PullParticipantsIntoContacts == true){
+			console.log(configuration);
+		}
 		return ConfigurationModel.setConfiguration(hubspotId, configuration)
 	}
 
 	public static async updateConfiguration(configuration: Configuration): Promise<void> {
+		if(configuration.PullParticipantsIntoContacts == true){
+			console.log(configuration);
+		}
 		return ConfigurationModel.updateConfiguration(configuration)
 	}
 }
