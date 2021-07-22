@@ -130,6 +130,7 @@ export function Controller(state: Config) {
                     PullParticipantsIntoContacts: false,
                     PushContactsAsParticipants: false,
                     PullContactsIntoParticipants: false,
+                    hubspotID: "" // TODO: Need to get Hubspot ID on this page from Login
                 }),
             });
         };

@@ -74,12 +74,12 @@ export default function ErrorDialog() {
             An Integration between SaaSquatch and Hubspot already exists with this SaaSquatch account and a different Hubspot account.
           </Typography>
           <Typography gutterBottom>
-            Login in with this Hubspot account to continue.
+            Log in with the connected Hubspot account to continue.
           </Typography>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
-            Return to Login
+            Return to Log in
           </Button>
         </DialogActions>
       </Dialog>
