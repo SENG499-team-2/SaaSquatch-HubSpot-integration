@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import HubspotLogo from '../assets/HubspotLogo.png';
 import axios from 'axios';
 import history from '../types/history';
+import { usePenpal } from '@saasquatch/integration-boilerplate-react';
+import jwt_decode from 'jwt-decode';
+import ErrorDialog from './Dialog';
 
 /**
  * Renders the login screen (available at /login).
@@ -54,12 +57,14 @@ const ErrorText = styled.p`
     display: flex;
 `;
 
-const HUBSPOT_AUTHORIZATION = '/hubspot_authorization';
-const HUBSPOT_OAUTH_URL = '/hubspot_url';
+const HUBSPOT_AUTHORIZATION= '/hubspot_authorization'
+const HUBSPOT_OAUTH_URL = '/hubspot_url'
+const API_CONFIGURATION_URL = '/api/configuration'
 
 interface states {
-    showError: boolean;
-    OAuth: () => void;
+  showError: boolean;
+  accountError: boolean;
+  OAuth: ()=>void;
 }
 
 export function Login() {
@@ -68,9 +73,16 @@ export function Login() {
 
 export function OAuthFunction() {
     const [showError, setError] = useState(false);
+    const [accountError, setAccountError] = useState(false);
+
+    const penpal = usePenpal()
+    // sub is the attribute of the tenant alias from the tenant token
+    const tenantAliasUnparsed: {sub: string} = jwt_decode(penpal.tenantScopedToken);
+    // the alias is sent of the form exampleAlias@tenants
+    const tenantAliasParsed: string = tenantAliasUnparsed.sub.split('@')[0]
 
     const OAuth = async () => {
-        setError(false);
+      let hubspotID = "";
 
         // Check Server for Hubspot Authorization
         await axios
@@ -90,21 +102,45 @@ export function OAuthFunction() {
                             // Check for when popup closes
                             var timer = setInterval(function () {
                                 if (popup && popup.closed) {
+                                    setAccountError(false);
                                     // Check Server for Hubspot Authorization
                                     axios
                                         .get(HUBSPOT_AUTHORIZATION)
                                         .then((response) => {
-                                            // Send user to configuration page if authorized
-                                            if (response.data === 'Authorized') {
-                                                clearInterval(timer);
-                                                history.push('/configuration');
-                                            }
                                             // Show error message when popup window is closed without Authorization
                                             if (response.data === 'Unauthorized') {
-                                                clearInterval(timer);
-                                                setTimeout(function () {
-                                                    setError(true);
-                                                }, 600);
+                                              clearInterval(timer);
+                                              setTimeout(function () {
+                                                  setError(true);
+                                              }, 600);
+                                            }
+                                            // Send user to configuration page if authorized and integration account doesn't already exist
+                                            else {
+                                              clearInterval(timer);
+                                              hubspotID = response.data;
+                                              axios
+                                                  .get(API_CONFIGURATION_URL, { params: {SaaSquatchTenantAlias: tenantAliasParsed} })
+                                                  .then((response) => {
+                                                  // The hubspotID matches the existing user or a blank config object is returned if the user doesn't exist yet in the database
+                                                  if (response.data.hubspotID === hubspotID || ( response.data.hubspotID === '' &&
+                                                      response.data.PushPartixipantsAsContacts === false && 
+                                                      response.data.PullParticipantsIntoContacts === false && 
+                                                      response.data.DeleteContactwhenParticipantDeleted === false &&
+                                                      response.data.PushContactsAsParticipants === false &&
+                                                      response.data.PullContactsIntoParticipants === false &&
+                                                      response.data.DeleteParticipantWhenContactDeleted === false &&
+                                                      response.data.accessToken === "" && 
+                                                      response.data.refreshToken === ""))  {
+                                                      history.push('/configuration');
+                                                  } else {
+                                                      // Show account error and reset frontend token if integration exists with a different Hubspot account
+                                                      document.cookie="frontendToken=''; SameSite=None; Secure";
+                                                      setAccountError(true);
+                                                  }
+                                                })
+                                                .catch(error => {
+                                                  console.error('Error: Unable to retrieve Configuration Data');
+                                                })
                                             }
                                         })
                                         .catch(function (err) {
@@ -114,21 +150,46 @@ export function OAuthFunction() {
                                                     HUBSPOT_AUTHORIZATION,
                                             );
                                         });
-                                }
-                            }, 200);
+                                    }
+                                  }, 200);
+                                })
+                                .catch(function(err) {
+                                  console.error(err + "Error getting Hubspot URL from: " + HUBSPOT_OAUTH_URL);
+                                });
+                                } else {
+                                  // Send user to configuration page if authorized and integration account doesn't already exist
+                                  hubspotID = response.data;
+                                  axios.get(API_CONFIGURATION_URL,
+                                    { params: {SaaSquatchTenantAlias: tenantAliasParsed} }
+                                  )
+                                  .then((response) => {
+                                    // The hubspotID matches the existing user or a blank config object is returned if the user doesn't exist yet in the database
+                                    if (response.data.hubspotID === hubspotID || ( response.data.hubspotID === '' &&
+                                      response.data.PushPartixipantsAsContacts === false && 
+                                      response.data.PullParticipantsIntoContacts === false && 
+                                      response.data.DeleteContactwhenParticipantDeleted === false &&
+                                      response.data.PushContactsAsParticipants === false &&
+                                      response.data.PullContactsIntoParticipants === false &&
+                                      response.data.DeleteParticipantWhenContactDeleted === false &&
+                                      response.data.accessToken === "" && 
+                                      response.data.refreshToken === ""))  {
+                                      history.push('/configuration');
+                                    } else {
+                                      // Show account error and reset frontend token if integration exists with a different Hubspot account
+                                      document.cookie="frontendToken=''; SameSite=None; Secure";
+                                      setAccountError(true);
+                                    }
+                                  })
+                                  .catch(error => {
+                                    console.error('Error: Unable to retrieve Configuration Data');
+                                  })
+                              }
                         })
-                        .catch(function (err) {
-                            console.error(err + 'Error getting Hubspot URL from: ' + HUBSPOT_OAUTH_URL);
-                        });
-                } else {
-                    history.push('/configuration');
-                }
-            })
             .catch(function (err) {
-                console.error(err + 'Error getting Hubspot Authorization from: ' + HUBSPOT_AUTHORIZATION);
-            });
+            console.error(err + 'Error getting Hubspot Authorization from: ' + HUBSPOT_AUTHORIZATION);
+        });
     };
-    return { showError, OAuth } as states;
+    return { showError, accountError, OAuth } as states;
 }
 
 export function View(states: states) {
@@ -154,6 +215,12 @@ export function View(states: states) {
                     ) : (
                         <React.Fragment />
                     )}
+                </div>
+                <div>
+                    { states.accountError ?  
+                        <ErrorDialog
+                        /> : <div></div>
+                    }
                 </div>
             </div>
         </Wrapper>
