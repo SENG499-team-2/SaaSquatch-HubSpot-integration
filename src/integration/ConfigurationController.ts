@@ -50,12 +50,17 @@ export class ConfigurationController {
                     const createContactBody = {
                         properties: basicInfo,
                     };
-                    await this.hubApiModel.createObject('contacts', createContactBody);
+                    await this.hubApiModel.createObject('contacts', createContactBody, 20465599);
                 }
             }
 
             console.log(configuration);
         }
+
+        return ConfigurationModel.setConfiguration('20465599', configuration);
+    }
+
+    public static async updateConfiguration(configuration: Configuration): Promise<void> {
         return ConfigurationModel.updateConfiguration(configuration);
     }
 }

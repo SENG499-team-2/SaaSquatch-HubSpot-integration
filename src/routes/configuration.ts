@@ -67,7 +67,11 @@ router.put(API_CONFIGURATION_URL, async (req, res) => {
     }
     if (validate(req.body) && decoded != undefined) {
         const configuration: Configuration = req.body as Configuration;
-        configurationController.updateConfiguration(configuration);
+        // <<<<<<< HEAD
+        //         configurationController.updateConfiguration(configuration);
+
+        ConfigurationController.updateConfiguration(configuration);
+
         res.sendStatus(200);
         res.end();
     } else if (!validate(req.body)) {
