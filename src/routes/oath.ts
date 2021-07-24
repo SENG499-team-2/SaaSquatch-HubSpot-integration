@@ -2,7 +2,7 @@ import { Router } from 'express';
 require('dotenv').config();
 import axios from 'axios';
 const querystring = require('query-string');
-import { AddTempUser } from "../database"
+import { AddTempUser } from '../database';
 import { PollTokensFromDatabase } from '../database';
 import { IntegrationTokens } from '../Types/types';
 const jwt = require('jsonwebtoken');
@@ -120,10 +120,9 @@ router.get('/hubspot_authorization', async (req, res) => {
     }
     if (decoded != undefined) {
         try {
-			res.json(decoded.data);
-			res.end();
-        }
-        catch(e){
+            res.json(decoded.data);
+            res.end();
+        } catch (e) {
             console.error(e);
         }
     } else {

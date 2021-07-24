@@ -29,25 +29,25 @@ router.get(API_CONFIGURATION_URL, async (req, res) => {
     }
 });
 router.post(API_CONFIGURATION_URL, async (req, res) => {
-	let decoded = undefined
-	if(req.cookies.frontendToken) {
-		decoded = authenticateToken(req.cookies.frontendToken as string)
-	}
-	if(validate(req.body) && decoded != undefined) {
-		const configuration: Configuration = req.body as Configuration
-		ConfigurationController.setConfiguration(configuration.hubspotID, configuration)
-		res.sendStatus(200)
-		res.end()
-	} else if (!validate(req.body)) {
-		console.error(`POST ${API_CONFIGURATION_URL} -> Failed to validate response body`)
-		res.sendStatus(400);
-		res.end();
-	} else if (decoded === undefined) {
-		console.error(`POST ${API_CONFIGURATION_URL} -> Failed to validate OAuth token`)
-		res.sendStatus(400);
-		res.end();
-	}
-})
+    let decoded = undefined;
+    if (req.cookies.frontendToken) {
+        decoded = authenticateToken(req.cookies.frontendToken as string);
+    }
+    if (validate(req.body) && decoded != undefined) {
+        const configuration: Configuration = req.body as Configuration;
+        ConfigurationController.setConfiguration(configuration.hubspotID, configuration);
+        res.sendStatus(200);
+        res.end();
+    } else if (!validate(req.body)) {
+        console.error(`POST ${API_CONFIGURATION_URL} -> Failed to validate response body`);
+        res.sendStatus(400);
+        res.end();
+    } else if (decoded === undefined) {
+        console.error(`POST ${API_CONFIGURATION_URL} -> Failed to validate OAuth token`);
+        res.sendStatus(400);
+        res.end();
+    }
+});
 router.put(API_CONFIGURATION_URL, async (req, res) => {
     let decoded = undefined;
     if (req.cookies.frontendToken) {
