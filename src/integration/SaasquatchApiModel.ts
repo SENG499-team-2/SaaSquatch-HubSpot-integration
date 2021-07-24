@@ -68,4 +68,33 @@ export class SaasquatchApiModel {
             console.log(e);
         }
     }
+
+    /**
+     * Get all users from SaaSquatch
+     * the limit of this api call is that will only return
+     * 2,147,483,647 participants in one time. if there are over
+     * 2,147,483,647 participants, it will fail to return the resting
+     * participants.
+     */
+    public async getAllParticipants() {
+        try {
+            console.log('start getting all participants');
+            //                             https://app.referralsaasquatch.com/api/v1/{tenant_alias}/users?query=&limit=&offset=
+            const getAllParticipantsURL =
+                'https://staging.referralsaasquatch.com/api/v1/' + this.TENANTALIAS + '/users?query=&limit=2147483647';
+            const response = await axios.get(getAllParticipantsURL, {
+                auth: {
+                    username: '',
+                    password: this.SAPIKEY,
+                },
+            });
+            console.log('test' + response);
+            const data = response.data;
+            // console.log(data);
+            return data;
+        } catch (e) {
+            console.error('Was not able to get the participants list');
+            console.log(e);
+        }
+    }
 }
