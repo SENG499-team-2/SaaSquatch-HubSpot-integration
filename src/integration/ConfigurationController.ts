@@ -8,6 +8,8 @@ import { Configuration } from '../Types/types';
 import { ConfigurationModel } from './ConfigurationModel';
 import { HubspotApiModel } from './HubspotApiModel';
 import { SaasquatchApiModel } from './SaasquatchApiModel';
+import { saasquatchUpdatesController } from './saasquatchUpdatesController';
+
 import axios from 'axios';
 
 export class ConfigurationController {
@@ -22,45 +24,34 @@ export class ConfigurationController {
         return ConfigurationModel.getConfiguration(tenantAlias);
     }
     public static async setConfiguration(hubspotId: string, configuration: Configuration): Promise<void> {
+        console.log('setConfiguration');
         if (configuration.PullParticipantsIntoContacts == true) {
-            console.log('setConfiguration');
-            console.log(configuration);
+            saasquatchUpdatesController.historicalSync(
+                new SaasquatchApiModel(process.env.SAPIKEY!, configuration.SaaSquatchTenantAlias),
+                new HubspotApiModel(),
+            );
         }
+
+        // if (configuration.PullParticipantsIntoContacts == true) {
+        //     console.log('setConfiguration');
+        //     console.log(configuration);
+        // }
         return ConfigurationModel.setConfiguration(hubspotId, configuration);
     }
 
-    public async updateConfiguration(configuration: Configuration): Promise<void> {
+    public static async updateConfiguration(configuration: Configuration): Promise<void> {
+        console.log('updateConfiguration');
         if (configuration.PullParticipantsIntoContacts == true) {
-            console.log('updateConfiguration');
-            // const participants = await this.saasApiModel.getAllParticipants();
-            // console.log(participants);
-
-            const data = await this.saasApiModel.getAllParticipants();
-            if (data.count != 0) {
-                console.log('there are total ' + data.count + ' contacts');
-                for (let i = 0; i < data.totalCount; i++) {
-                    console.log(data.users[i].id);
-                    // this.hubApiModel.createContact(data.users[i]);
-                    const basicContactInfo = {
-                        email: data.users[i].email,
-                        firstname: data.users[i].firstName,
-                        lastname: data.users[i].lastName,
-                    };
-                    const basicInfo = Object.assign(basicContactInfo);
-                    const createContactBody = {
-                        properties: basicInfo,
-                    };
-                    await this.hubApiModel.createObject('contacts', createContactBody, 20465599);
-                }
-            }
-
-            console.log(configuration);
+            saasquatchUpdatesController.historicalSync(
+                new SaasquatchApiModel(process.env.SAPIKEY!, configuration.SaaSquatchTenantAlias),
+                new HubspotApiModel(),
+            );
         }
 
         return ConfigurationModel.setConfiguration('20465599', configuration);
     }
 
-    public static async updateConfiguration(configuration: Configuration): Promise<void> {
-        return ConfigurationModel.updateConfiguration(configuration);
-    }
+    // public static async updateConfiguration(configuration: Configuration): Promise<void> {
+    //     return ConfigurationModel.updateConfiguration(configuration);
+    // }
 }

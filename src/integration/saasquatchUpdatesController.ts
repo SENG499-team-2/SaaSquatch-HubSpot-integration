@@ -89,4 +89,53 @@ export class saasquatchUpdatesController {
     public Test(saasquatchPayload: SaasquatchPayload): void {
         console.info('Received SaaSquatch test webhook:' + saasquatchPayload);
     }
+
+    public static async historicalSync(saasquatchApiModel: SaasquatchApiModel, hubspotApiModel: HubspotApiModel) {
+        console.log('updateConfiguration');
+        // const participants = await this.saasApiModel.getAllParticipants();
+        // console.log(participants);
+
+        const data = await saasquatchApiModel.getAllParticipants();
+
+        if (data.totalCount != 0) {
+            console.log('there are total ' + data.totalCount + ' contacts');
+            for (let i = 0; i < data.totalCount; i++) {
+                const contactsSearchBody = {
+                    filterGroups: [
+                        {
+                            filters: [
+                                {
+                                    value: data.users[i].email,
+                                    propertyName: 'email',
+                                    operator: 'EQ',
+                                },
+                            ],
+                        },
+                    ],
+                    limit: 1,
+                };
+                const contactsSearchResponse = await hubspotApiModel.searchObject(
+                    'contacts',
+                    contactsSearchBody,
+                    20465599,
+                );
+                if (contactsSearchResponse?.data.total == 0) {
+                    console.log(data.users[i].id);
+                    // this.hubApiModel.createContact(data.users[i]);
+                    const basicContactInfo = {
+                        email: data.users[i].email,
+                        firstname: data.users[i].firstName,
+                        lastname: data.users[i].lastName,
+                    };
+                    const basicInfo = Object.assign(basicContactInfo);
+                    const createContactBody = {
+                        properties: basicInfo,
+                    };
+                    // console.log("print contact users email: " + createContactBody.properties.email);
+                    // console.log(createContactBody);
+                    await hubspotApiModel.createObject('contacts', createContactBody, 20465599);
+                }
+            }
+        }
+    }
 }
